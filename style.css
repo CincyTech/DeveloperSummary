@@ -1,0 +1,22 @@
+body {
+  background-color:#EBE4D5;
+  color:#373737;
+  font-family: 'Lato', sans-serif; 
+  margin:0;
+  padding:0; 
+}
+
+h1 {
+  color:#fff;
+  background-color:#5E4B44;
+  width:100%;
+  padding:.5em 2em;
+  text-align: center;
+  margin-top:0;
+}
+
+canvas {
+  margin:0px auto;
+  display:block;
+  margin-bottom:3em;
+}
