@@ -19,4 +19,5 @@ canvas {
   margin:0px auto;
   display:block;
   margin-bottom:3em;
+  max-width:500px;
 }
