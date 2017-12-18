@@ -4,7 +4,8 @@ import {
   standardizeCompanySize,
   standardizeExperience,
   checkNumeric,
-  colors 
+  colors,
+  options
 } from "./helpers";
 
 (()=> {
@@ -72,15 +73,7 @@ import {
             borderWidth: 1
         }]
     },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
-                }
-            }]
-        }
-    }
+    options
   });
 
   const skillsBar = document.getElementById('skillsBar');
@@ -96,15 +89,7 @@ import {
             borderWidth: 1
         }]
     },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
-                }
-            }]
-        }
-    }
+    options
   });
 
   const genderBar = document.getElementById('genderBar');
@@ -120,18 +105,10 @@ import {
             borderWidth: 1
         }]
     },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
-                }
-            }]
-        }
-    }
+    options
   });
 
-  const ctx = document.getElementById('myChart');
+  const ctx = document.getElementById('happinessAndSalary');
   const scatterChart = new Chart.Line(ctx, {
     data: {
       datasets: [{
@@ -154,5 +131,5 @@ import {
     }
   });
 
-})(data, checkNumeric, standardizeExperience, standardizeCompanySize);
+})(data, checkNumeric, standardizeExperience, standardizeCompanySize, options);
   
