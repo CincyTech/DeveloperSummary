@@ -1,62 +1,14 @@
 import data from "./answers";
 
-function checkNumeric(objName) {
-  objName = objName.replace('$','');
-  return Number(objName.replace(/\,/g,''));
-}
-
-function standardizeExperience(exp){
-  switch (exp) {
-    case '0-1':
-      return 1;
-      break;
-    case '2-4':
-      return 2;
-      break;
-    case '4-6':
-      return 3;
-      break;
-    case '6-8':
-      return 4;
-      break;
-    case '8-10':
-      return 5;
-      break;
-    case '10-15':
-      return 6;
-      break;
-    default:
-      return 7;
-  }
-}
-
-
-function standardizeCompanySize(size){
-  switch (size) {
-    case '1-5':
-      return 1;
-      break;
-    case '6-10':
-      return 2;
-      break;
-    case '10-50':
-      return 3;
-      break;
-    case '50-100':
-      return 4;
-      break;
-    case '100+':
-      return 5;
-    break;
-      return 6;
-  }
-}
+import { 
+  standardizeCompanySize,
+  standardizeExperience,
+  checkNumeric,
+  colors 
+} from "./helpers";
 
 (()=> {
 
-  let male = 0;
-  let female = 0;
-  
   const happinessSalary = data.map((item)=> {
     return {x: item.happy, y: checkNumeric(item.salary)}
   });
@@ -65,38 +17,48 @@ function standardizeCompanySize(size){
     return {y: item.happy, x: standardizeCompanySize(item.size)}
   });
 
+  // Super ugly but WFN.
   const skills = data.reduce((acc,answer)=>{
     const skills = answer.skills.toLowerCase();
 
     if(skills.includes('php')) acc.php++;
-    if(skills.includes('javascript') || skills.includes('js') || skills.includes('react') || skills.includes('angular') || skills.includes('node')) acc.javascript++;
+
+    if(skills.includes('javascript') || 
+    skills.includes('js') || 
+    skills.includes('react') || 
+    skills.includes('angular') || 
+    skills.includes('node')) acc.javascript++;
+
     if(skills.includes('.net')) acc.net++;
+
     if(skills.includes('rails') || skills.includes('ruby')) acc.rails++;
+
     if(skills.includes('python')) acc.python++;
+
     if(skills.includes('java ') || skills.includes('java,')) acc.java++;
+
     if(skills.includes('c++')) acc.cplus++;
+    
     if(skills.includes('c#')) acc.csharp++;
 
     return acc;
   },{php:0, java:0, javascript:0, net:0, rails:0, python:0, cplus:0, csharp:0})
   
-
   const experiences = data.map((item)=>{
     return standardizeExperience(item.experience);
   });
 
-  var counts = {};
-  experiences.forEach((x)=> { counts[x] = (counts[x] || 0)+1; });
+  let experienceCounts = {};
+  experiences.forEach((x)=> { experienceCounts[x] = (experienceCounts[x] || 0)+1; });
 
-  const filter = data.forEach((person)=> {
-    if(person.gender === "Male") male++;
-    if(person.gender === "Female") female++;
-  });
+  const genders = data.reduce((acc, person)=> {
+    if(person.gender === "Male") acc.males++;
+    if(person.gender === "Female") acc.females++;
 
-  const genders = [male,female];
+    return acc;
+  }, {males:0, females:0});
 
-  Chart.defaults.global.elements.rectangle.borderWidth = 0;
-
+  // Build the charts.
   const experienceBar = document.getElementById('experienceBar');
   var myChart = new Chart(experienceBar, {
     type: 'bar',
@@ -104,25 +66,9 @@ function standardizeCompanySize(size){
         labels: ["0-1", "2-4", "4-6", "6-8", "8-10", "10-15", "15+"],
         datasets: [{
             label: 'Years of Experience',
-            data: Object.values(counts),
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 159, 64, 0.6)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
+            data: Object.values(experienceCounts),
+            backgroundColor: colors,
+            borderColor: colors,
             borderWidth: 1
         }]
     },
@@ -145,26 +91,8 @@ function standardizeCompanySize(size){
         datasets: [{
             label: 'Languages',
             data: Object.values(skills),
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 159, 64, 0.6)',
-                'rgba(255, 59, 64, 0.6)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 59, 64, 0.6)'
-            ],
+            backgroundColor: colors,
+            borderColor: colors,
             borderWidth: 1
         }]
     },
@@ -186,15 +114,9 @@ function standardizeCompanySize(size){
         labels: ["Male", "Female"],
         datasets: [{
             label: 'Genders',
-            data: genders,
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)'
-            ],
+            data: Object.values(genders),
+            backgroundColor: colors,
+            borderColor: colors,
             borderWidth: 1
         }]
     },
